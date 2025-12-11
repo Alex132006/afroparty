@@ -1,0 +1,20 @@
+{
+  "name": "AfroParty",
+  "short_name": "AfroParty",
+  "icons": [
+    {
+      "src": "logo2.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "../images/image1280-q75 (7).jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#000"
+}

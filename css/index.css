@@ -1,0 +1,340 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../images/image1280-q75\ \(7\).jpg);
+    background-size: cover;
+    background-position: center;
+    filter: blur(2px) brightness(0.8);
+    z-index: -1;
+}
+
+.noms {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgb(255, 255, 255);
+    font-size: clamp(20px, 4vw, 28px);
+    
+    text-align: center;
+    width: 100%;
+    padding: 0 20px;
+    z-index: 10;
+}
+
+.grand-titre h2 {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: aliceblue;
+    font-size: clamp(36px, 10vw, 60px);
+    text-align: center;
+    width: 100%;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+}
+
+.grand-titre h2 span {
+    color: #3cff00cb;
+}
+
+.date {
+    position: fixed;
+    bottom: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: #ffffff;
+    width: 100%;
+    z-index: 10;
+}
+
+.date h2 {
+    font-size: clamp(22px, 6vw, 36px);
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.date p {
+    padding: 5px;
+    font-size: clamp(18px, 4vw, 24px);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* Boutons centrés */
+.btn {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 350px;
+    z-index: 100;
+    padding: 0 20px;
+}
+
+.btn-infos {
+    padding: 16px 32px;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+    margin: 0;
+    text-decoration: none;
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 140px;
+    flex: 1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.btn-infos:hover {
+    background-color: #2b2b2b;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    border-left-color: #ff0000;
+        border-bottom-color: #ff0000;
+}
+
+/* --- Styles de la Modale --- */
+.modal-target {
+    display: none;
+}
+
+#modal-info-opened:target {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 35px 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    position: relative;
+    color: rgb(255, 255, 255);
+    max-height: 85vh;
+    overflow-y: auto;
+    border: 2px solid #ffffff;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 40px;
+    text-decoration: none;
+    color: #ffffff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #e90000;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    font-size: clamp(24px, 5vw, 28px);
+    color: #c6c6c6;
+    text-align: center;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    text-align: center;
+    font-size: clamp(14px, 3vw, 16px);
+}
+
+.modal-content ul {
+    text-align: left;
+    margin: 20px 0;
+    padding-left: 20px;
+}
+
+.modal-content li {
+    margin-bottom: 12px;
+    font-size: clamp(15px, 3vw, 17px);
+    line-height: 1.5;
+}
+
+.modal-content li span {
+    color: #adadad;
+    font-weight: bold;
+}
+
+/* Social media buttons wrapper */
+.wrapper {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Social buttons list */
+.wrapper ul {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    padding: 0 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Individual social icon button */
+.wrapper .icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.608);
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Social icon font styling */
+.wrapper .icon i {
+    font-size: 22px;
+    color: white;
+}
+
+/* Social icon hover animation */
+.wrapper .icon:hover {
+    transform: scale(1.15) translateY(-5px);
+}
+
+/* Social icon hover colors */
+.wrapper .facebook:hover {
+    background: #1d7df2;
+    border-color: #1d7df2;
+}
+
+.wrapper .twitter:hover {
+    background: #24a1de;
+    border-color: #24a1de;
+}
+
+.wrapper .youtube:hover {
+    background: #cd201f;
+    border-color: #cd201f;
+}
+
+.wrapper .whatsapp:hover {
+    background: rgb(47, 183, 47);
+    border-color: rgb(47, 183, 47);
+}
+
+.wrapper .telephone:hover {
+    background: #333;
+    border-color: #333;
+}
+
+.wrapper .mail:hover {
+    background: #d71919;
+    border-color: #d71919;
+}
+
+.wrapper .telegram:hover {
+    background: #2aabee;
+    border-color: #2aabee;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn {
+        flex-direction: column;
+        gap: 15px;
+        max-width: 280px;
+    }
+
+    .btn-infos {
+        width: 100%;
+        padding: 14px 20px;
+    }
+
+    .modal-content {
+        padding: 25px 20px;
+    }
+
+    .wrapper .icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .wrapper .icon i {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grand-titre h2 {
+        top: 18%;
+    }
+
+    .date {
+        bottom: 160px;
+    }
+
+    .wrapper ul {
+        gap: 12px;
+    }
+
+    .wrapper .icon {
+        width: 42px;
+        height: 42px;
+    }
+}

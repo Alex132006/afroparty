@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mea+Culpa&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="../images/image1280-q75 (7).jpg">
+    <link rel="icon" href="../images/image1280-q75 (7).jpg" type="image/x-icon">
+    <link rel="icon" href="../images/image1280-q75 (7).jpg" type="image/png" sizes="any">
+    <link rel="apple-touch-icon" href="../images/image1280-q75 (7).jpg" sizes="180x180">
+    <link rel="manifest" href="manifest.json">
+    <title>Paiement</title>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="../css/unite.css">
+</head>
+
+<body>
+    <div class="notification" id="notification"></div>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="billet">
+        <h1 class="ligne">Inscription</h1>
+
+        <div class="user">
+            <input type="text" class="users" name="user" placeholder="Entrez votre nom" id="user" maxlength="50">
+            <input type="email" class="users" name="email" placeholder="Entrez votre e-mail" id="email" maxlength="100">
+            <input type="tel" class="users" name="phone" placeholder="Entrez votre numéro" id="phone" maxlength="15">
+            <div class="use-btn">
+                <button type="button" class="users-btn" id="submitBtn">Entrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="payment-modal" id="paymentModal">
+        <!-- Payment modal content will be inserted here -->
+    </div>
+
+    <script src="../js/index.js"></script>
+</body>
+
+</html>
