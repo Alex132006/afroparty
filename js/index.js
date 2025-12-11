@@ -1,634 +1,154 @@
-// SYSTÈME CLIENT POUR ENVOYER LES DONNÉES À VOTRE EMAIL
-class BilletSystemUnite {
+// Script pour les feux d'artifice
+class Fireworks {
   constructor() {
-    this.amount = 3000;
-    this.isSubmitting = false;
-
-    // Configuration EmailJS POUR VOTRE EMAIL
-    this.emailjsConfig = {
-      serviceId: "service_7br4og8", // Votre Service ID EmailJS
-      templateId: "service_7br4og8", // Votre Template ID EmailJS
-      publicKey: "ilBN1m2FSmf485897", // Votre Public Key EmailJS
-      toEmail: "roliaissongo060@gmail.com", // VOTRE EMAIL - les données arriveront ici
-    };
-
-    // LIENS BANCAIRES - MODIFIEZ CES LIENS AVEC VOS VRAIS LIENS
-    this.bankLinks = {
-      sberbank: "https://www.sberbank.com/sms/pbpn?requisiteNumber=79850740834", // Remplacez par votre lien Sberbank
-      tinkoff: "", // Remplacez par votre lien Tinkoff
-    };
-
+    this.container = document.getElementById("fireworks-container");
+    this.colors = [
+      "#FF0000",
+      "#00FF00",
+      "#0000FF",
+      "#FFFF00",
+      "#FF00FF",
+      "#00FFFF",
+      "#FF4500",
+      "#32CD32",
+      "#1E90FF",
+      "#FFD700",
+      "#DA70D6",
+      "#00CED1",
+      "#1ac600",
+      "#FF1493",
+      "#00FF7F",
+      "#4169E1",
+      "#FF69B4",
+      "#7CFC00",
+    ];
     this.init();
   }
 
   init() {
-    console.log("🚀 Initialisation système Unité...");
-
-    // Initialiser EmailJS
-    this.initEmailJS();
-    this.setupFormSubmission();
-    this.setupInputValidation();
-  }
-
-  initEmailJS() {
-    try {
-      // Initialiser EmailJS avec votre Public Key
-      emailjs.init(this.emailjsConfig.publicKey);
-      console.log(
-        "✅ EmailJS initialisé pour envoyer à:",
-        this.emailjsConfig.toEmail
-      );
-    } catch (error) {
-      console.error("❌ Erreur initialisation EmailJS:", error);
-    }
-  }
-
-  setupFormSubmission() {
-    const submitBtn = document.getElementById("submitBtn");
-    if (!submitBtn) {
-      console.error("❌ Bouton submit non trouvé");
-      return;
+    // Créer plusieurs feux d'artifice au démarrage
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => this.createFirework(), i * 1000);
     }
 
-    submitBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("🔄 Clic sur le bouton Entrer");
-      this.handleFormSubmission();
-    });
+    // Continuer à créer des feux d'artifice
+    setInterval(() => this.createFirework(), 1500);
 
-    // Écouter la touche Entrée sur tous les champs
-    const inputs = document.querySelectorAll(".users");
-    inputs.forEach((input) => {
-      input.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          console.log("⌨️ Touche Entrée pressée");
-          this.handleFormSubmission();
-        }
-      });
-    });
-
-    console.log("✅ Événements de soumission configurés");
-  }
-
-  setupInputValidation() {
-    const inputs = document.querySelectorAll(".users");
-    inputs.forEach((input) => {
-      input.addEventListener("input", (e) => {
-        this.validateInput(e.target);
-      });
+    // Créer des feux d'artifice au clic
+    document.addEventListener("click", (e) => {
+      this.createFireworkAt(e.clientX, e.clientY);
     });
   }
 
-  validateInput(input) {
-    const value = input.value.trim();
-
-    switch (input.type) {
-      case "text":
-        // Autoriser seulement lettres, espaces et certains caractères spéciaux
-        input.value = value.replace(/[^a-zA-ZÀ-ÿ\s\-']/g, "");
-        break;
-      case "email":
-        if (value && !this.validateEmail(value)) {
-          input.style.borderColor = "#ff4757";
-        } else {
-          input.style.borderColor = "#ffffff";
-        }
-        break;
-      case "tel":
-        // Autoriser seulement chiffres, +, -, espaces, parenthèses
-        input.value = value.replace(/[^\d+\-\s()]/g, "");
-        if (value && !this.validatePhone(value)) {
-          input.style.borderColor = "#ff4757";
-        } else {
-          input.style.borderColor = "#ffffff";
-        }
-        break;
-    }
+  createFirework() {
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * (window.innerHeight * 0.6);
+    this.explode(x, y);
   }
 
-  async handleFormSubmission() {
-    if (this.isSubmitting) {
-      console.log("⏳ Déjà en cours de soumission...");
-      return;
-    }
+  createFireworkAt(x, y) {
+    this.explode(x, y);
+  }
 
-    this.isSubmitting = true;
-    this.showLoading(true);
+  explode(x, y) {
+    const firework = document.createElement("div");
+    firework.className = "firework";
+    firework.style.left = x + "px";
+    firework.style.top = y + "px";
+    firework.style.backgroundColor =
+      this.colors[Math.floor(Math.random() * this.colors.length)];
 
-    try {
-      console.log("🔄 Début du traitement du formulaire...");
+    this.container.appendChild(firework);
 
-      const clientData = this.getFormData();
-      if (!clientData) {
-        this.isSubmitting = false;
-        this.showLoading(false);
-        return;
+    // Animation du feu d'artifice
+    firework.animate(
+      [
+        { transform: "scale(0.5)", opacity: 0 },
+        { transform: "scale(1)", opacity: 1 },
+        { transform: "scale(0.5)", opacity: 0 },
+      ],
+      {
+        duration: 500,
+        easing: "ease-out",
       }
+    );
 
-      console.log("✅ Données du formulaire valides:", clientData);
-
-      // ENVOYER DIRECTEMENT LES DONNÉES À VOTRE EMAIL
-      const emailSent = await this.sendDataToYourEmail(clientData);
-
-      if (emailSent) {
-        this.showSuccess("Inscription réussie ! Données envoyées.");
-
-        // Sauvegarder aussi en local
-        await this.saveClientData(clientData);
-
-        await this.processPayment(clientData);
-        this.resetForm();
-      } else {
-        this.showError("Erreur envoi des données. Veuillez réessayer.");
-      }
-    } catch (error) {
-      console.error("❌ Erreur soumission:", error);
-      this.showError("Erreur lors de l'inscription. Veuillez réessayer.");
-    } finally {
-      this.isSubmitting = false;
-      this.showLoading(false);
-    }
-  }
-
-  getFormData() {
-    const nom1 = document.getElementById("user").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-
-    console.log("📝 Validation des données:", { nom1, email, phone });
-
-    // Validation des champs requis
-    if (!nom1 || !email || !phone) {
-      this.showError("Veuillez remplir tous les champs obligatoires");
-      return null;
-    }
-
-    if (!this.validateEmail(email)) {
-      this.showError("Veuillez entrer un email valide");
-      return null;
-    }
-
-    if (!this.validatePhone(phone)) {
-      this.showError("Veuillez entrer un numéro de téléphone valide");
-      return null;
-    }
-
-    if (!this.validateName(nom1)) {
-      this.showError("Le nom contient des caractères non autorisés");
-      return null;
-    }
-
-    return {
-      nom1: nom1,
-      email: email,
-      phone: phone,
-      type: "unite",
-      timestamp: new Date().toISOString(),
-      page: "unite",
-      ip: "local",
-      userAgent: navigator.userAgent,
-      id: this.generateUniqueId(),
-      paiement: "En attente",
-    };
-  }
-
-  validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-
-  validatePhone(phone) {
-    const cleaned = phone.replace(/\s/g, "");
-    // Autoriser les formats internationaux
-    const re = /^[\+]?[0-9\-\s\(\)]{8,}$/;
-    return re.test(cleaned) && cleaned.replace(/\D/g, "").length >= 8;
-  }
-
-  validateName(name) {
-    const re = /^[a-zA-ZÀ-ÿ\s\-']+$/;
-    return re.test(name);
-  }
-
-  generateUniqueId() {
-    return "UNI_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
-  }
-
-  async sendDataToYourEmail(clientData) {
-    try {
-      console.log("📧 Envoi des données client à votre email...");
-
-      // Préparer les données pour l'email
-      const templateParams = {
-        to_email: this.emailjsConfig.toEmail, // VOTRE EMAIL
-        client_name: clientData.nom1,
-        client_email: clientData.email,
-        client_phone: clientData.phone,
-        billet_type: "Single",
-        amount: this.amount + " ₽",
-        date_inscription: new Date().toLocaleDateString("fr-FR"),
-        timestamp: clientData.timestamp,
-        payment_status: "En attente",
-        reference: clientData.id,
-        subject: `NOUVELLE INSCRIPTION - ${clientData.nom1}`,
-        message: `
-                            NOUVELLE INSCRIPTION CLIENT:
-                            
-                            📋 INFORMATIONS CLIENT:
-                            Nom: ${clientData.nom1}
-                            Email: ${clientData.email}
-                            Téléphone: ${clientData.phone}
-                            
-                            🎫 INFORMATIONS BILLET:
-                            Type: Single
-                            Montant: ${this.amount} ₽
-                            Date: ${new Date().toLocaleDateString("fr-FR")}
-                            Référence: ${clientData.id}
-                            
-                            📊 AUTRES INFORMATIONS:
-                            Page: ${clientData.page}
-                            User Agent: ${clientData.userAgent}
-                            Statut Paiement: ${clientData.paiement}
-                        `,
-      };
-
-      // Envoyer l'email avec EmailJS
-      const response = await emailjs.send(
-        this.emailjsConfig.serviceId,
-        this.emailjsConfig.templateId,
-        templateParams
-      );
-
-      console.log("✅ Données envoyées avec succès à votre email:", response);
-      this.showNotification("Données envoyées à votre email!", "success");
-      return true;
-    } catch (error) {
-      console.error("❌ Erreur envoi email:", error);
-      this.showError("Erreur envoi des données. Veuillez réessayer.");
-      return false;
-    }
-  }
-
-  async saveClientData(clientData) {
-    try {
-      console.log("💾 Sauvegarde locale des données...");
-
-      // Fallback vers localStorage
-      const saved = this.saveToLocalStorage(clientData);
-      if (saved) {
-        console.log("✅ Client sauvegardé localement");
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("❌ Erreur sauvegarde locale:", error);
-      return false;
-    }
-  }
-
-  saveToLocalStorage(clientData) {
-    try {
-      let clients =
-        JSON.parse(localStorage.getItem("bielleterie_clients")) || [];
-
-      // Vérifier les doublons
-      const isDuplicate = clients.some(
-        (client) =>
-          client.email === clientData.email || client.phone === clientData.phone
-      );
-
-      if (!isDuplicate) {
-        clients.push(clientData);
-
-        // Limiter à 100 entrées maximum
-        if (clients.length > 100) {
-          clients = clients.slice(-100);
-        }
-
-        localStorage.setItem("bielleterie_clients", JSON.stringify(clients));
-        console.log("✅ Client sauvegardé en localStorage");
-        return true;
-      } else {
-        console.log("⚠️ Client déjà enregistré");
-        return true;
-      }
-    } catch (error) {
-      console.error("❌ Erreur localStorage:", error);
-      return false;
-    }
-  }
-
-  async processPayment(clientData) {
-    return new Promise((resolve) => {
-      console.log("💳 Ouverture de la fenêtre de paiement...");
-
-      const paymentWindow = document.createElement("div");
-      paymentWindow.style.cssText = `
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: rgba(0, 0, 0, 0.95);
-                        padding: 30px;
-                        border-radius: 15px;
-                        z-index: 10000;
-                        color: white;
-                        text-align: center;
-                        min-width: 300px;
-                        box-shadow: 0 0 50px rgba(255,107,107,0.3);
-                        border: 2px solid #ff6b6b;
-                        backdrop-filter: blur(10px);
-                    `;
-
-      paymentWindow.innerHTML = `
-                        <h3 style="color: #ff6b6b; margin-bottom: 20px;">💳 Paiement Unité</h3>
-                        <p><strong>${clientData.nom1}</strong></p>
-                        <p>Email: ${clientData.email}</p>
-                        <p>Téléphone: ${clientData.phone}</p>
-                        <div style="margin: 20px 0; padding: 15px; background: rgba(255,107,107,0.1); border-radius: 10px;">
-                            <p style="font-size: 24px; font-weight: bold; color: #ff6b6b;">${this.amount} FCFA</p>
-                        </div>
-                        
-                        <div style="margin: 20px 0;">
-                            <p style="margin-bottom: 15px; color: #ccc;">Choisissez votre méthode de paiement :</p>
-                            
-                            <button id="sberbankPayment" 
-                                    style="background: #0fd343b6; color: white; padding: 15px 25px; border: 1px solid #eee; border-radius: 15px; margin: 10px; cursor: pointer; font-size: 16px; font-weight: bold; width: 200px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                                <i class="fa-solid fa-building-columns"></i>
-                                Sberbank
-                            </button>
-                            
-                            <button id="tinkoffPayment"
-                                    style="background: #0fd343b6; color: black; padding: 15px 25px; border: 1px solid #eee; border-radius: 15px; margin: 10px; cursor: pointer; font-size: 16px; font-weight: bold; width: 200px; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                                <i class="fa-solid fa-credit-card"></i>
-                                Tinkoff
-                            </button>
-                        </div>
-                        
-                        <div style="margin: 20px 0;">
-                            <button id="cancelPayment" 
-                                    style="background: #666; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin: 5px; cursor: pointer; font-size: 14px;">
-                                Annuler
-                            </button>
-                        </div>
-                        
-                        <p style="font-size: 12px; color: #ccc; margin-top: 20px;">
-                            Vous serez redirigé vers la plateforme de paiement sécurisée
-                        </p>
-                    `;
-
-      document.body.appendChild(paymentWindow);
-
-      // Gestion du paiement Sberbank
-      document.getElementById("sberbankPayment").onclick = async () => {
-        console.log("🏦 Paiement Sberbank sélectionné");
-
-        // Ouvrir le lien Sberbank dans un nouvel onglet
-        window.open(this.bankLinks.sberbank, "_blank");
-
-        // Simuler un paiement réussi après un délai
-        setTimeout(async () => {
-          await this.sendPaymentConfirmation(clientData, "success", "Sberbank");
-          await this.handlePaymentResult("success", clientData.id, "Sberbank");
-          paymentWindow.remove();
-          resolve(true);
-        }, 2000);
-      };
-
-      // Gestion du paiement Tinkoff
-      document.getElementById("tinkoffPayment").onclick = async () => {
-        console.log("💳 Paiement Tinkoff sélectionné");
-
-        // Ouvrir le lien Tinkoff dans un nouvel onglet
-        window.open(this.bankLinks.tinkoff, "_blank");
-
-        // Simuler un paiement réussi après un délai
-        setTimeout(async () => {
-          await this.sendPaymentConfirmation(clientData, "success", "Tinkoff");
-          await this.handlePaymentResult("success", clientData.id, "Tinkoff");
-          paymentWindow.remove();
-          resolve(true);
-        }, 2000);
-      };
-
-      // Gestion de l'annulation
-      document.getElementById("cancelPayment").onclick = async () => {
-        console.log("❌ Paiement annulé");
-
-        await this.sendPaymentConfirmation(clientData, "cancelled", "Aucune");
-        await this.handlePaymentResult("cancelled", clientData.id, "Aucune");
-        paymentWindow.remove();
-        resolve(false);
-      };
-
-      // Désactiver le bouton de soumission pendant le paiement
-      document.getElementById("submitBtn").disabled = true;
-    });
-  }
-
-  async sendPaymentConfirmation(clientData, status, bank) {
-    try {
-      console.log("📧 Envoi confirmation paiement...");
-
-      const templateParams = {
-        to_email: this.emailjsConfig.toEmail, // VOTRE EMAIL
-        client_name: clientData.nom1,
-        client_email: clientData.email,
-        client_phone: clientData.phone,
-        billet_type: "Single",
-        amount: this.amount + " ₽",
-        payment_status:
-          status === "success"
-            ? "PAYÉ"
-            : status === "cancelled"
-            ? "ANNULÉ"
-            : "ÉCHEC",
-        payment_date: new Date().toLocaleDateString("fr-FR"),
-        bank_method: bank,
-        reference: clientData.id,
-        subject: `PAIEMENT ${
-          status === "success"
-            ? "◌ En cours"
-            : status === "cancelled"
-            ? "ANNULÉ"
-            : "◌ En cours"
-        } - ${clientData.nom1}`,
-        message: `
-                            STATUT DE PAIEMENT: ${
-                              status === "success"
-                                ? "◌ En cours"
-                                : status === "cancelled"
-                                ? "🟡 ANNULÉ"
-                                : "◌ En cours"
-                            }
-                            BANQUE: ${bank}
-                            
-                            📋 INFORMATIONS CLIENT:
-                            Nom: ${clientData.nom1}
-                            Email: ${clientData.email}
-                            Téléphone: ${clientData.phone}
-                            
-                            💳 INFORMATIONS PAIEMENT:
-                            Type: Single
-                            Montant: ${this.amount} ₽
-                            Date: ${new Date().toLocaleDateString("fr-FR")}
-                            Statut: ${
-                              status === "success"
-                                ? "En cours sur Sberbank"
-                                : status === "cancelled"
-                                ? "Non abouti"
-                                : "En cours sur tinkoff"
-                            }
-                            Méthode: ${bank}
-                            Référence: ${clientData.id}
-                        `,
-      };
-
-      await emailjs.send(
-        this.emailjsConfig.serviceId,
-        this.emailjsConfig.templateId,
-        templateParams
-      );
-
-      console.log("✅ Confirmation paiement envoyée");
-    } catch (error) {
-      console.error("❌ Erreur envoi confirmation paiement:", error);
-    }
-  }
-
-  async handlePaymentResult(status, clientId, bank) {
-    try {
-      console.log(
-        `🔄 Traitement du résultat du paiement: ${status} via ${bank}`
-      );
-
-      await this.updatePaymentStatus(clientId, status, bank);
-      await this.savePaymentRecord(clientId, status, bank);
-
-      // Réactiver le bouton
-      document.getElementById("submitBtn").disabled = false;
-
-      if (status === "success") {
-        this.showSuccess(
-          `Paiement confirmé via ${bank} ! Votre billet est validé.`
-        );
-        console.log("✅ Paiement traité avec succès");
-      } else if (status === "cancelled") {
-        this.showNotification("Paiement annulé.", "warning");
-        console.log("🟡 Paiement annulé");
-      } else {
-        this.showError("Paiement échoué. Veuillez réessayer.");
-        console.log("❌ Paiement échoué traité");
-      }
-    } catch (error) {
-      console.error("❌ Erreur traitement paiement:", error);
-      this.showError("Erreur lors du traitement du paiement.");
-      document.getElementById("submitBtn").disabled = false;
-    }
-  }
-
-  async updatePaymentStatus(clientId, status, bank) {
-    try {
-      // Mettre à jour le statut en localStorage
-      this.updatePaymentStatusFallback(clientId, status, bank);
-      console.log("✅ Statut paiement mis à jour:", clientId, status, bank);
-    } catch (error) {
-      console.error("❌ Erreur mise à jour statut paiement:", error);
-    }
-  }
-
-  updatePaymentStatusFallback(clientId, status, bank) {
-    try {
-      let clients =
-        JSON.parse(localStorage.getItem("bielleterie_clients")) || [];
-      const clientIndex = clients.findIndex((client) => client.id === clientId);
-      if (clientIndex !== -1) {
-        clients[clientIndex].paiement =
-          status === "success"
-            ? "Payé"
-            : status === "cancelled"
-            ? "Annulé"
-            : "Échec";
-        clients[clientIndex].paymentMethod = bank;
-        clients[clientIndex].paymentDate = new Date().toISOString();
-        localStorage.setItem("bielleterie_clients", JSON.stringify(clients));
-        console.log("✅ Statut paiement mis à jour en fallback");
-      }
-    } catch (error) {
-      console.error("❌ Erreur fallback statut paiement:", error);
-    }
-  }
-
-  async savePaymentRecord(clientId, status, bank) {
-    try {
-      const payment = {
-        id: "pay_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9),
-        clientId: clientId,
-        amount: this.amount,
-        status: status,
-        method: bank,
-        timestamp: new Date().toISOString(),
-        type: "unite",
-      };
-
-      // Sauvegarder en localStorage
-      let payments =
-        JSON.parse(localStorage.getItem("bielleterie_payments")) || [];
-      payments.push(payment);
-      localStorage.setItem("bielleterie_payments", JSON.stringify(payments));
-
-      console.log("✅ Enregistrement de paiement sauvegardé");
-    } catch (error) {
-      console.error("❌ Erreur sauvegarde paiement:", error);
-    }
-  }
-
-  showLoading(show) {
-    const loading = document.getElementById("loading");
-    const submitBtn = document.getElementById("submitBtn");
-
-    if (show) {
-      loading.style.display = "block";
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Traitement...";
-    } else {
-      loading.style.display = "none";
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Entrer";
-    }
-  }
-
-  showSuccess(message) {
-    this.showNotification(message, "success");
-  }
-
-  showError(message) {
-    this.showNotification(message, "error");
-  }
-
-  showNotification(message, type = "success") {
-    const notification = document.getElementById("notification");
-    notification.textContent = message;
-    notification.className = `notification ${type}`;
-    notification.style.display = "block";
-
-    console.log(`📢 Notification: ${message}`);
-
+    // Créer les particules après l'explosion
     setTimeout(() => {
-      notification.style.display = "none";
-    }, 5000);
+      this.createParticles(x, y);
+      firework.remove();
+    }, 500);
   }
 
-  resetForm() {
-    document.getElementById("user").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("phone").value = "";
-    console.log("🔄 Formulaire réinitialisé");
+  createParticles(x, y) {
+    const particleCount = 30 + Math.floor(Math.random() * 20);
+    const color = this.colors[Math.floor(Math.random() * this.colors.length)];
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.style.left = x + "px";
+      particle.style.top = y + "px";
+      particle.style.backgroundColor = color;
+
+      this.container.appendChild(particle);
+
+      // Direction et vitesse aléatoires
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 2 + Math.random() * 4;
+      const distance = 50 + Math.random() * 100;
+
+      const xEnd = x + Math.cos(angle) * distance;
+      const yEnd = y + Math.sin(angle) * distance;
+
+      // Animation de la particule
+      particle.animate(
+        [
+          {
+            transform: "translate(0, 0) scale(1)",
+            opacity: 1,
+          },
+          {
+            transform: `translate(${Math.cos(angle) * distance}px, ${
+              Math.sin(angle) * distance
+            }px) scale(0.2)`,
+            opacity: 0,
+          },
+        ],
+        {
+          duration: 800 + Math.random() * 700,
+          easing: "cubic-bezier(0.1, 0.8, 0.2, 1)",
+        }
+      );
+
+      // Supprimer la particule après l'animation
+      setTimeout(() => {
+        particle.remove();
+      }, 1500);
+    }
   }
 }
 
-// Initialisation du système
+// Démarrer les feux d'artifice lorsque la page est chargée
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("📄 Page Unité chargée - Prête à recevoir les inscriptions");
-  window.billetSystem = new BilletSystemUnite();
+  new Fireworks();
+});
+
+// Ajouter des effets spéciaux au survol des boutons
+document.querySelectorAll(".btn-infos, .icon").forEach((button) => {
+  button.addEventListener("mouseenter", (e) => {
+    const rect = button.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    // Créer un petit feu d'artifice au survol
+    if (window.fireworks) {
+      window.fireworks.createFireworkAt(x, y);
+    }
+  });
+});
+
+// Exposer l'instance pour l'utiliser ailleurs
+document.addEventListener("DOMContentLoaded", () => {
+  window.fireworks = new Fireworks();
 });
